@@ -23,6 +23,9 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.03;
 
+
+let mesh, wireframe;
+
 // Load model.json
 fetch('models/model.json')
   .then(response => response.json())
@@ -55,13 +58,13 @@ fetch('models/model.json')
     });
   
     // Create mesh
-    const mesh = new THREE.Mesh(geometry, material);
+    mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
   
     // **Edges (Wireframe) should be created after geometry is set up**
     const edges = new THREE.EdgesGeometry(geometry);
     const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
-    const wireframe = new THREE.LineSegments(edges, lineMaterial);
+    wireframe = new THREE.LineSegments(edges, lineMaterial);
     scene.add(wireframe);
   }
   
@@ -81,3 +84,28 @@ window.addEventListener("resize", () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
+
+//I added this for the button functionality
+document.getElementById("toggleWireframeButton").addEventListener("click", () => {
+  console.log("The button was clicked");
+  if(mesh.visible){
+    mesh.visible = false;
+    wireframe.material.color.set("red");
+    document.getElementById("toggleWireframeButton").innerText = "Show Faces and Edges";
+  } else {
+    mesh.visible = true;
+    wireframe.material.color.set("black");
+    document.getElementById("toggleWireframeButton").innerText = "Just show the Edges"
+  }
+});
+
+
+document.getElementById("showEdges").addEventListener("click", () => {
+  if(wireframe.visible){
+    wireframe.visible = false;
+    document.getElementById("secondEdges").innerText = "Show Edges"
+  } else {
+    wireframe.visible = true;
+    document.getElementById("secondEdges").innerText = "Remove Edges"
+  }
+});
