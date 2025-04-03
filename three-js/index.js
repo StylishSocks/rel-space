@@ -60,10 +60,21 @@ fetch('models/model.json')
     // Create mesh
     mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
+
+    const colorPicker = document.getElementById('colorPicker');
+    colorPicker.addEventListener('input', (event) => {
+    console.log("Color picker changed:", event.target.value); 
+    if (mesh && mesh.material) {
+        mesh.material.color.set(event.target.value);
+        console.log("Color set to:", event.target.value);
+    } else {
+        console.log("Mesh or material is missing.");
+    }
+});
   
     // **Edges (Wireframe) should be created after geometry is set up**
     const edges = new THREE.EdgesGeometry(geometry);
-    const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
+    const lineMaterial = new THREE.LineBasicMaterial({ color: "white" });
     wireframe = new THREE.LineSegments(edges, lineMaterial);
     scene.add(wireframe);
   }
@@ -90,12 +101,12 @@ document.getElementById("toggleWireframeButton").addEventListener("click", () =>
   console.log("The button was clicked");
   if(mesh.visible){
     mesh.visible = false;
-    wireframe.material.color.set("red");
-    document.getElementById("toggleWireframeButton").innerText = "Show Faces and Edges";
+    wireframe.material.color.set("white");
+    document.getElementById("toggleWireframeButton").innerText = "Faces: Off";
   } else {
     mesh.visible = true;
-    wireframe.material.color.set("black");
-    document.getElementById("toggleWireframeButton").innerText = "Just show the Edges"
+    wireframe.material.color.set("white");
+    document.getElementById("toggleWireframeButton").innerText = "Faces: On"
   }
 });
 
@@ -103,9 +114,9 @@ document.getElementById("toggleWireframeButton").addEventListener("click", () =>
 document.getElementById("showEdges").addEventListener("click", () => {
   if(wireframe.visible){
     wireframe.visible = false;
-    document.getElementById("secondEdges").innerText = "Show Edges"
+    document.getElementById("showEdges").innerText = "Edges: Off"
   } else {
     wireframe.visible = true;
-    document.getElementById("secondEdges").innerText = "Remove Edges"
+    document.getElementById("showEdges").innerText = "Edges: On"
   }
 });
