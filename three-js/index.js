@@ -61,8 +61,8 @@ fetch('models/model.json')
     mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
 
-    const colorPicker = document.getElementById('colorPicker');
-    colorPicker.addEventListener('input', (event) => {
+    const colorPickerFaces = document.getElementById('colorPickerFaces');
+    colorPickerFaces.addEventListener('input', (event) => {
     console.log("Color picker changed:", event.target.value); 
     if (mesh && mesh.material) {
         mesh.material.color.set(event.target.value);
@@ -70,6 +70,7 @@ fetch('models/model.json')
     } else {
         console.log("Mesh or material is missing.");
     }
+
 });
   
     // **Edges (Wireframe) should be created after geometry is set up**
@@ -110,7 +111,7 @@ document.getElementById("toggleWireframeButton").addEventListener("click", () =>
   }
 });
 
-
+//This is for showing the edges or not
 document.getElementById("showEdges").addEventListener("click", () => {
   if(wireframe.visible){
     wireframe.visible = false;
@@ -118,5 +119,17 @@ document.getElementById("showEdges").addEventListener("click", () => {
   } else {
     wireframe.visible = true;
     document.getElementById("showEdges").innerText = "Edges: On"
+  }
+});
+
+//Here is the code for adding color to the edges based on the color picker
+const colorPickerEdges = document.getElementById('colorPickerEdges');
+colorPickerEdges.addEventListener('input', (event) => {
+  console.log("Edge color picker changed:", event.target.value);
+  if (wireframe && wireframe.material) {
+    wireframe.material.color.set(event.target.value);
+    console.log("Edge color set to:", event.target.value);
+  } else {
+    console.log("Wireframe or material is missing.");
   }
 });
