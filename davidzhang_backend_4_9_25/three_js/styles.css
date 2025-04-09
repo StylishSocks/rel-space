@@ -1,0 +1,55 @@
+#toggleWireframeButton {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border-color: white;
+    background-color: rgb(0, 0, 0);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 100;
+  }
+
+  #showEdges {
+    position: absolute;
+    top: 20px;
+    left: 150px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border-color: white;
+    background-color: rgb(0, 0, 0);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 100;
+  }
+
+  #colorPickerFaces {
+    position: absolute;
+    top: 20px;
+    left: 280px;
+    padding: 6px 20px;
+    border-radius: 10px;
+    border-color: white;
+    background-color: rgb(0, 0, 0);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 100;
+  }
+
+  #colorPickerEdges {
+    position: absolute;
+    top: 20px;
+    left: 550px;
+    padding: 6px 20px;
+    border-radius: 10px;
+    border-color: white;
+    background-color: rgb(0, 0, 0);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 100;
+  }

@@ -1,0 +1,24 @@
+version: '3.8'  # Specifies the Docker Compose version
+
+services:
+  flask-app:
+    build: ./backendflask  # Path to the Flask app's Dockerfile
+    ports:
+      - "5000:5000"  # Map container port 5000 to local port 5000
+    volumes:
+      - ./backendflask:/app  # Sync local files with the container for live updates
+    environment:
+      - FLASK_APP=flaskapp.py
+      - FLASK_RUN_HOST=0.0.0.0
+    depends_on:
+      - node-app  # Ensures the Node app starts first if needed
+
+  node-app:
+    build: ./backendnodejs  # Path to the Node.js app's Dockerfile
+    ports:
+      - "3000:3000"  # Map container port 3000 to local port 3000
+    volumes:
+      - ./backendnodejs:/app  # Sync local files with the container for live updates
+    environment:
+      - NODE_ENV=development
+    command: ["npm", "start"]  # Override CMD from Dockerfile if needed
