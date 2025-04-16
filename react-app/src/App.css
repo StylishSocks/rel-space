@@ -1,21 +1,18 @@
 html,
-body {
+body,
+#root {
   margin: 0;
   padding: 0;
-  width: 100vw;
-  height: 100vh;
+  height: 100%;
+  width: 100%;
   overflow: hidden;
-  background-color: black;
 }
 
 .app-container {
   width: 100vw;
   height: 100vh;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: black; /* Optional: set background */
-  position: relative; /* Needed for absolutely positioned UI buttons */
+  position: relative;
+  background-color: black;
 }
 
 .three-canvas {

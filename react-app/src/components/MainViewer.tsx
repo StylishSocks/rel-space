@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import ViewerControls from "./ViewerControls";
 
 const MainViewer: React.FC = () => {
   const mountRef = useRef<HTMLDivElement>(null);
@@ -32,11 +33,19 @@ const MainViewer: React.FC = () => {
     camera.position.set(0, 0, 10);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
+
+    console.log(
+      "Mount size:",
+      mountRef.current.clientWidth,
+      mountRef.current.clientHeight
+    );
+
     renderer.setSize(
       mountRef.current.clientWidth,
       mountRef.current.clientHeight
     );
     mountRef.current.appendChild(renderer.domElement);
+    console.log("Canvas mounted?", renderer.domElement);
 
     // Lights
     scene.add(new THREE.AmbientLight(0xffffff, 1));
@@ -53,6 +62,7 @@ const MainViewer: React.FC = () => {
     fetch("/models/example.json")
       .then((res) => res.json())
       .then((data) => {
+        console.log("Model file loaded.");
         const geometry = new THREE.BufferGeometry();
         geometry.setAttribute(
           "position",
@@ -69,6 +79,7 @@ const MainViewer: React.FC = () => {
           metalness: 0.3,
           roughness: 0.7,
         });
+
         const mesh = new THREE.Mesh(geometry, material);
         meshRef.current = mesh;
         scene.add(mesh);
@@ -79,6 +90,19 @@ const MainViewer: React.FC = () => {
         const wireframe = new THREE.LineSegments(edges, lineMaterial);
         wireframeRef.current = wireframe;
         scene.add(wireframe);
+
+        const box = new THREE.Box3().setFromObject(mesh);
+        const center = box.getCenter(new THREE.Vector3());
+        mesh.position.sub(center); // center the model
+        wireframe.position.sub(center);
+
+        const size = box.getSize(new THREE.Vector3()).length();
+        const distance = size * 1.5;
+        camera.position.set(0, 0, distance);
+        controls.target.set(0, 0, 0);
+        controls.update();
+
+        console.log("Model rendered.");
 
         // ✅ Notify React that model is ready
         setModelLoaded(true);
@@ -142,34 +166,18 @@ const MainViewer: React.FC = () => {
   }, [edgeColor]);
 
   return (
-    <div>
-      <div ref={mountRef} style={{ width: "100%", height: "600px" }} />
-      <div className="toolbar">
-        <button onClick={() => setFacesVisible((prev) => !prev)}>
-          Faces: {facesVisible ? "On" : "Off"}
-        </button>
-        <button onClick={() => setEdgesVisible((prev) => !prev)}>
-          Edges: {edgesVisible ? "On" : "Off"}
-        </button>
-
-        <label>
-          <span>Face</span>
-          <input
-            type="color"
-            value={faceColor}
-            onChange={(e) => setFaceColor(e.target.value)}
-          />
-        </label>
-
-        <label>
-          <span>Edge</span>
-          <input
-            type="color"
-            value={edgeColor}
-            onChange={(e) => setEdgeColor(e.target.value)}
-          />
-        </label>
-      </div>
+    <div className="app-container">
+      <div ref={mountRef} className="three-canvas" />
+      <ViewerControls
+        facesVisible={facesVisible}
+        edgesVisible={edgesVisible}
+        faceColor={faceColor}
+        edgeColor={edgeColor}
+        onToggleFaces={() => setFacesVisible((prev) => !prev)}
+        onToggleEdges={() => setEdgesVisible((prev) => !prev)}
+        onFaceColorChange={setFaceColor}
+        onEdgeColorChange={setEdgeColor}
+      />
     </div>
   );
 };
