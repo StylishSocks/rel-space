@@ -48,7 +48,12 @@ const MainViewer: React.FC = () => {
     const height = container.clientHeight;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 10000);
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      width / height,
+      0.01,
+      100000
+    );
     cameraRef.current = camera;
     camera.position.set(0, 0, 10);
 
