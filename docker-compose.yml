@@ -10,3 +10,15 @@ services:
     environment:
       - FLASK_APP=flaskapp.py
       - FLASK_RUN_HOST=0.0.0.0
+
+  frontend-dev:
+    build:
+      context: ./react-app
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./react-app:/app # Reflect host changes
+      - /app/node_modules # Keep container modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true # Enable polling if file‑watch issues
