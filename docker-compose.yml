@@ -1,0 +1,12 @@
+version: "3.8" # Specifies the Docker Compose version
+
+services:
+  flask-app:
+    build: ./backendflask # Path to the Flask app's Dockerfile
+    ports:
+      - "5000:5000" # Map container port 5000 to local port 5000
+    volumes:
+      - ./backendflask:/app # Sync local files with the container for live updates
+    environment:
+      - FLASK_APP=flaskapp.py
+      - FLASK_RUN_HOST=0.0.0.0

@@ -5,6 +5,9 @@ interface ViewerControlsProps {
   edgesVisible: boolean;
   faceColor: string;
   edgeColor: string;
+  axesVisible: boolean;
+  onResetView: () => void;
+  onToggleAxes: () => void;
   onToggleFaces: () => void;
   onToggleEdges: () => void;
   onFaceColorChange: (color: string) => void;
@@ -16,6 +19,9 @@ const ViewerControls: React.FC<ViewerControlsProps> = ({
   edgesVisible,
   faceColor,
   edgeColor,
+  axesVisible,
+  onResetView,
+  onToggleAxes,
   onToggleFaces,
   onToggleEdges,
   onFaceColorChange,
@@ -47,6 +53,11 @@ const ViewerControls: React.FC<ViewerControlsProps> = ({
           onChange={(e) => onEdgeColorChange(e.target.value)}
         />
       </label>
+      <button onClick={onResetView}>Reset View</button>
+
+      <button onClick={onToggleAxes}>
+        {axesVisible ? "Hide Axes" : "Show Axes"}
+      </button>
     </div>
   );
 };
