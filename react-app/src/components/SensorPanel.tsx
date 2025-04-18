@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-//import { ENDPOINTS } from "../utils/api";
+import { ENDPOINTS } from "../utils/api";
 
 interface SensorData {
   timestamp: string;
@@ -15,8 +15,6 @@ const defaultSensorData: SensorData = {
   stress: 0,
 };
 
-const SENSOR_API_ENDPOINT = "/api/sensors";
-
 const SensorPanel: React.FC = () => {
   const [sensorData, setSensorData] = useState<SensorData>(defaultSensorData);
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +24,7 @@ const SensorPanel: React.FC = () => {
 
   const fetchSensorData = async () => {
     try {
-      const response = await fetch(SENSOR_API_ENDPOINT);
+      const response = await fetch(ENDPOINTS.sensors);
       if (!response.ok) {
         throw new Error("Failed to fetch sensor data");
       }
