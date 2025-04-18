@@ -19,12 +19,62 @@ body,
   flex: 3; /* Adjust as needed */
 }
 
-/* SensorPanel styling */
-.app-container > :last-child {
-  flex: 1;
-  border-left: 1px solid #ccc; /* Optional visual separation */
-  padding: 20px;
+/* SensorPanel container */
+.sensor-panel {
+  background-color: rgba(0, 0, 0, 0.877);
+  color: white;
+  padding: 16px;
+  border-radius: 12px;
+  width: 300px; /* match your controls width */
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  overflow-y: auto;
+}
+
+/* Header */
+.sensor-panel h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  text-align: center;
+}
+
+/* Individual reading row */
+.sensor-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Value text */
+.sensor-item p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Status dot */
+.status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* Last-updated text */
+.sensor-panel small {
+  display: block;
+  text-align: center;
+  font-size: 0.75rem;
+  color: #ccc;
+}
+
+/* Error message */
+.sensor-panel .error {
+  color: #ff6b6b;
+  text-align: center;
+  font-size: 0.9rem;
 }
 
 .three-canvas {
