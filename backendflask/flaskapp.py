@@ -1,20 +1,35 @@
 import os
-from flask import Flask, request, jsonify
-from werkzeug.utils import secure_filename
 import trimesh
+import threading
+import time
+import random
+import json
+from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
+from werkzeug.utils import secure_filename
+from datetime import datetime, timezone
 
 app = Flask(__name__)
 CORS(app)
 
+# create variables
+
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'stp', 'step', 'iges', 'igs', 'stl'}  
 global_parsed = None
+sensor_data = {
+    "temperature":0.0,
+    "pressure":0.0,
+    "stress":0.0
+}
+
+# create an "uploads" directory and set max content length to 16 MB
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# auxilliary functions
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -41,6 +56,28 @@ def process_iges_file(filepath):
         return {"file_type": "IGES", "status": "failed", "message": "Error reading IGES file"}
     except Exception as e:
         return {"file_type": "IGES", "status": "error", "message": str(e)}
+    
+def update_sensor_data():
+    while True:
+        sensor_data["temperature"] = round(random.uniform(100, 150), 2)
+        sensor_data["pressure"] = round(random.uniform(150, 300), 2)
+        sensor_data["stress"] = round(random.uniform(300, 400), 2)
+        time.sleep(1)
+
+# api endpoints
+
+@app.route('/api/')
+def index():
+    return '''
+    <!doctype html>
+    <title>Upload CAD File (STEP/IGES/STL)</title>
+    <h1>Upload CAD File</h1>
+    <form method="post" enctype="multipart/form-data" action="/api/cad">
+      <input type="file" name="file">
+      <input type="submit" value="Upload">
+    </form>
+
+    '''
 
 @app.route('/api/cad', methods=['POST'])
 def upload_file():
@@ -72,23 +109,24 @@ def upload_file():
     return jsonify({'error': 'File type not allowed'}), 400
 
 @app.route('/api/cad/result', methods = ['GET'])
-def okay():
+def file_parsed():
     return global_parsed
 
-@app.route('/api/')
-def index():
-    return '''
-    <!doctype html>
-    <title>Upload CAD File (STEP/IGES/STL)</title>
-    <h1>Upload CAD File</h1>
-    <form method="post" enctype="multipart/form-data" action="/api/cad">
-      <input type="file" name="file">
-      <input type="submit" value="Upload">
-    </form>
-
-    '''
+@app.route('/api/sensors', methods=['GET'])
+def get_sensor_data():
+    response = {
+        "timestamp": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00', 'Z'),
+        "temperature": sensor_data["temperature"],
+        "pressure": sensor_data["pressure"],
+        "stress": sensor_data["stress"]
+    }
+    # ensure the keys are displayed exactly like in the reponse variable
+    return Response(json.dumps(response), mimetype = 'application/json')
 
 if __name__ == '__main__':
+    # Start the background thread
+    threading.Thread(target = update_sensor_data, daemon = True).start()
+    # Start the Flask app
     app.run(host="0.0.0.0", port=5000)
 
 
